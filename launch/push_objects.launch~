@@ -1,9 +1,0 @@
-<launch>
-  <include file="$(find lis_turtlebots)/launch/amcl_demo.launch">
-    <arg name="map_file" value="$(find push_objects)/maps/office_map.yaml" />
-  </include>
-
-  <node pkg="lis_turtlebots" type="push_object.py" name="push_object"  output="screen">
-    <remap from="lis_turtlebots/cmd_vel" to="cmd_vel_mux/input/teleop"/>
-  </node>
-</launch>

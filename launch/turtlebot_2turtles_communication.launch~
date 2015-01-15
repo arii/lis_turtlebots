@@ -1,8 +1,0 @@
-<launch>
-
-  <node pkg="lis_turtlebots" type="turtlebot_2turtles_communication.py" name="turtlebot_communication"  output="screen">
-    <remap from="turtlebot_communication/cmd_vel" to="cmd_vel_mux/input/teleop"/>
-  </node>
-
-</launch>
-

@@ -1,5 +1,0 @@
-<launch>
-  <node pkg="lis_turtlebots" type="basic_turtlebot.py" name="basic_turtlebot"  output="screen">
-    <remap from="basic_turtlebot/cmd_vel" to="cmd_vel_mux/input/teleop"/>
-  </node>
-</launch>

@@ -1,8 +1,0 @@
-<launch>
-
-  <node pkg="lis_turtlebots" type="waiters.py" name="waiter"  output="screen">
-    <remap from="waiter/cmd_vel" to="cmd_vel_mux/input/teleop"/>
-  </node>
-
-</launch>
-
