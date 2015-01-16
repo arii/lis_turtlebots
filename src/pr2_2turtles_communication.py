@@ -34,7 +34,16 @@ class interface:
           self.state = init_state
 
       self.event_loop()
-      
+  
+  def observe(self):
+        if self.state == self.WAITING_TO_PLACE:
+            observation = "waiting_for_turtlebot"
+        elif self.state == self.PLACING:
+            observation = "serving_turtlebot"
+        else:
+            observation = "not_serving"
+        return observation
+
   def event_loop(self):
       while True:
           rospy.loginfo("starting event loop!  current state = %d" % self.state)
