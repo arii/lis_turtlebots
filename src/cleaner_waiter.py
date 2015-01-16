@@ -324,8 +324,19 @@ class Waiter(MultiNavigator):
 
 
 if __name__=="__main__":
-    name = raw_input("Enter name: ")
+    from argparse import ArgumentParser
+    parser = ArgumentParser("select which turtle to use.  default is Donatello")
+    parser.add_argument("-d", "--donatello", action="store_true", help="select donatello",dest="donatello")
+    parser.add_argument("-l", "--leonardo", action="store_true", help="select leonardo", dest="leonardo")
+    args = parser.parse_args()
+    if not (args.leonardo or args.donatello):
+        name = "donatello"
+    elif args.leonardo:
+        name = "leonardo"
+    else:
+        name = "donatello"
     rospy.init_node("waiter_"+name)
+    rospy.loginfo("starting waiter with turtle %s " % name)
     waiter = Waiter(name)
     raw_input("Hit enter to start...")
     waiter.eventLoop()
