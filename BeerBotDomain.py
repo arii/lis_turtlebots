@@ -7,7 +7,7 @@ class AGENTS:
     DONATELLO, LEONARDO = range(2)
 
 class ACTIONS:
-    ROOOM_1, ROOM_2, ROOM_3, KITCHEN, GET_DRINK = range(5)
+    ROOM_1, ROOM_2, ROOM_3, KITCHEN, GET_DRINK = range(5)
 
 class ObservationType:
     num= 0
