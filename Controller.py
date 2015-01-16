@@ -21,14 +21,22 @@ def gen_lookup_str(array):
     str_array = ['%s' % val for val in array]
     return ("_").join(str_array)
 
-class DummyAgent:
-    def __init__(self):
-        self.num = 0
+class Agent:
+    def __init__(self, num=0):
+        self.num = num
+    def get_observation(self):
+        raise NotImplementedError()
+
+    def do_action(self, action):
+        raise NotImplementedError()
+
+class DummyAgent(Agent):
     def get_observation(self):
         print "getting an observation"
         return [0,0,0,0]
     def do_action(self, action):
         print "doing action %s " % action
+
 
 
 class Controller:
