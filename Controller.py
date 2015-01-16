@@ -40,9 +40,9 @@ class DummyAgent(Agent):
 
 
 class Controller:
-    def __init__(self, agent, node):
+    def __init__(self, agent):
         self.agent = agent
-        self.node = node
+
         self.act = import_map("planner_files/actMapMealy.csv")
         self.trans = import_map("planner_files/TransMap.csv")
         self.observations = Observations()
@@ -67,14 +67,15 @@ class Controller:
             print "could not find transition from lookup str %s " % lookup_str
             raise Exception
         print "transition %s : %s" % (lookup_str, node)
-        self.node = node
         return node
     
-    def run(self, debug=True):
+    def run(self, start_node, start_obs, debug=True):
+        self.node = start_node
+        obs = start_obs
         while True:
-            obs = self.agent.get_observation()
             act = self.action(obs)
-            self.transition(obs, act)
+            obs = self.agent.get_observation()
+            self.node = self.transition(obs, act)
             print "Doing action %s " % act
             if debug:
                 raw_input()
@@ -84,10 +85,10 @@ class Controller:
 
 if __name__=="__main__":
     agent = DummyAgent()
-    ctrl = Controller(agent, 0)
+    ctrl = Controller(agent)
 
     """ Run event loop wih dummy agent """
-    ctrl.run(True)
+    ctrl.run(0, [0,0,0,0], True)
     
     """ Test all permuations of observations and actions"""
     for i in range(4):
