@@ -24,20 +24,14 @@ def gen_lookup_str(array):
 class Agent:
     def __init__(self, num=0):
         self.num = num
-    def get_observation(self):
-        raise NotImplementedError()
 
     def do_action(self, action):
         raise NotImplementedError()
 
 class DummyAgent(Agent):
-    def get_observation(self):
-        print "getting an observation"
-        return [0,0,0,0]
     def do_action(self, action):
         print "doing action %s " % action
-
-
+        return [0,0,0,0]
 
 class Controller:
     def __init__(self, agent):
@@ -74,12 +68,11 @@ class Controller:
         obs = start_obs
         while True:
             act = self.action(obs)
-            obs = self.agent.get_observation()
             self.node = self.transition(obs, act)
             print "Doing action %s " % act
             if debug:
                 raw_input()
-            self.agent.do_action(act)
+            obs = self.agent.do_action(act)
              
 
 
