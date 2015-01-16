@@ -1,21 +1,27 @@
 #!/usr/bin/env python
+GABE = False
 
-import rospy
-from std_msgs.msg import String
-from move_base_msgs.msg import MoveBaseActionResult
-from move_base_msgs.msg import MoveBaseGoal
-from move_base_msgs.msg import MoveBaseAction
-from move_base_msgs.msg import MoveBaseActionResult
-from geometry_msgs.msg import Twist
-from ar_track_alvar.msg import AlvarMarkers
-from geometry_msgs.msg import PoseWithCovarianceStamped
-import actionlib
 import math
 import time
-#from turtlebot_2turtles_communication import *
 from SimpleServer import *
-from multinavigator import *
-from waiter_locations import *
+import rospy
+
+
+if GABE:
+    from std_msgs.msg import String
+    from move_base_msgs.msg import MoveBaseActionResult
+    from move_base_msgs.msg import MoveBaseGoal
+    from move_base_msgs.msg import MoveBaseAction
+    from move_base_msgs.msg import MoveBaseActionResult
+    from geometry_msgs.msg import Twist
+    from ar_track_alvar.msg import AlvarMarkers
+    from geometry_msgs.msg import PoseWithCovarianceStamped
+    import actionlib
+    from multinavigator import *
+    from waiter_locations import *
+else:
+    class MultiNavigator:
+        pass
 
 class Waiter(MultiNavigator):
     waiter_ports = {"donatello" : 12346, "leonardo" : 12347}
@@ -23,7 +29,11 @@ class Waiter(MultiNavigator):
     # states = "GO_TO_ROOM1", "GO_TO_ROOM2", "GO_TO_ROOM3", "GO_TO_KITCHEN", "WAIT_IN_KITCHEN", "ASK_FOR_DRINK", "GET_DRINK"
     
     def __init__(self, name, start_location = "kitchen", start_drinks_ordered = {"room1" : [], "room2" : [], "room3" : []}, start_action = "WAIT_IN_KITCHEN", debug = False, default_velocity = 0.3, default_angular_velocity = 0.75):
-        MultiNavigator.__init__(self, name, debug, default_velocity, default_angular_velocity)
+        if GABE:
+            MultiNavigator.__init__(self, name, debug, default_velocity, default_angular_velocity)
+        else:
+            self.debug = True
+            self.name = name
         #self.state = (location, drinks_ordered, drinks_on_turtlebot, state_of_pr2, state_of_other_turtlebot)
         
         self.action = start_action
@@ -51,33 +61,54 @@ class Waiter(MultiNavigator):
         rospy.loginfo("starting event loop! current action = " + self.action)
         while True:
             if (self.action == "GO_TO_ROOM1"):
-                self.goToRoom1()
+                if GABE: self.goToRoom1()
+                else: self.dummy_action()
                 self.action = "GO_TO_KITCHEN"
                 #self.transitionToNextState(obs) # GO_TO_KITCHEN, GO_TO_ROOM
+
             elif (self.action == "GO_TO_ROOM2"):
-                self.goToRoom2()
+                if GABE: self.goToRoom2()
+                else: self.dummy_action()
                 self.action = "GO_TO_KITCHEN"
                 #self.transitionToNextState(obs) # GO_TO_KITCHEN, GO_TO_ROOM
+
             elif (self.action == "GO_TO_ROOM3"):
-                self.goToRoom3()
+                if GABE: self.goToRoom3()
+                else: self.dummy_action()
                 self.action = "GO_TO_KITCHEN"
                 #self.transitionToNextState(obs) # GO_TO_KITCHEN, GO_TO_ROOM
+
             elif (self.action == "GO_TO_KITCHEN"):
-                self.goToKitchen()
+                if GABE:  self.goToKitchen()
+                else: self.dummy_action()
                 self.action = "WAIT_IN_KITCHEN"
                 #self.transitionToNextState(obs) # WAIT_IN_KITCHEN, GO_TO_ROOM
+
             elif (self.action == "WAIT_IN_KITCHEN"):
                 obs = self.waitInKitchen()
                 if (obs == "come " + self.name):
                     self.action = "GET_DRINK"
                 else:
                     self.action = "GO_TO_ROOM2"
+
                 #self.transitionToNextState(obs) # GET_DRINK, GO_TO_ROOM
                 #self.wait_until_msg_is("pr2 ready to place can")
                 #self.send_msg_to_pr2("can i come")
                 #self.wait_until_msg_is("come " + self.name)
                 #self.state = self.APPROACHING_PR2
+
             elif (self.action == "GET_DRINK"):
+                if GABE:
+                    if (not self.debug):
+                        self.approach()
+                        #self.turn()
+                    else:
+                        #XXX raw_input("Hit enter to approach PR2...")
+                        print ("Hit enter to approach PR2...")
+
+                else: 
+                    self.dummy_action()
+                
                 self.getDrink()
                 self.action = "GO_TO_ROOM2"
                 #self.transitionToNextState(obs) # GO_TO_ROOM
@@ -89,6 +120,10 @@ class Waiter(MultiNavigator):
                 #self.move(0.5, 0.25)
                 #self.send_msg_to_pr2("turtle left pr2")
                 #self.state = self.GOING_TO_KITCHEN
+    def dummy_action(self):
+        #raw_input("self dummy actions for %s"  % self.action)
+        print("self dummy actions for %s"  % self.action)
+        rospy.sleep(1)
 
     def transitionToNextAction(self, obs):
         pass
@@ -168,7 +203,9 @@ class Waiter(MultiNavigator):
             self.approach()
             #self.turn()
         else:
-            raw_input("Hit enter to approach PR2...")
+            print ("Hit enter to approach PR2...")
+            #XXX raw_input("Hit enter to approach PR2...")
+
         self.location = "pr2"
         self.send_msg_to_pr2("turtle in place position")
         if (not self.debug):
@@ -179,7 +216,8 @@ class Waiter(MultiNavigator):
         if (not self.debug):
             self.move(0.5, 0.25)
         else:
-            raw_input("Hit enter to leave PR2...")
+            print("Hit enter to leave PR2...")
+            #XXX raw_input("Hit enter to leave PR2...")
             
         self.send_msg_to_pr2("turtle left pr2")
         

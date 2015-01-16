@@ -4,8 +4,8 @@ import rospy
 from SimpleServer import SimpleServer, SimpleClient
 from argparse import ArgumentParser
 import time
-from waiters import *
-from basic_turtlebot import *
+#from waiters import *
+# from basic_turtlebot import *
 
 class interface:
   GOING_TO_KITCHEN, WAITING_FOR_PR2, APPROACHING_PR2, WAITING_FOR_DRINK= range(4)
