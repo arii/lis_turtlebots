@@ -53,7 +53,8 @@ if __name__=="__main__":
     ctrl = Controller(waiter)
 
     raw_input("Hit enter to start...")
-    ctrl.run(0, [0,0,0,0], True)
+    #initial obs in kitchen without drink or orders
+    ctrl.run(0, [3,0,0,3], True)
 
     
     
