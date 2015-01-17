@@ -26,7 +26,7 @@ class HOLD(ObservationType):
     num = 2
 
 class PR2:
-    SOMEONE, INHAND, NOTHING, NO_OBS = range(4)
+    SOMEONE, INHAND, NOT_READY, NO_OBS = range(4)
     num = 4
 
 class Observations:
