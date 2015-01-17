@@ -50,8 +50,10 @@ if __name__=="__main__":
     rospy.init_node("waiter_"+name)
     rospy.loginfo("starting waiter with turtle %s " % name)
     waiter = Waiter(name)
+    ctrl = Controller(waiter)
+
     raw_input("Hit enter to start...")
-    waiter.eventLoop()
+    ctrl.run(0, [0,0,0,0], True)
 
     
     
