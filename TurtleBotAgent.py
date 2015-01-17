@@ -28,21 +28,11 @@ class TurtleAgent(Agent):
             obs = self.turtle_ctrl.goToKitchen()
 
         elif action == ACTIONS.GET_DRINK:
-            obs = self.turtle_ctrl.waitAndGetDrink()
+            obs = self.turtle_ctrl.getDrink()
         else:
             print "incorrect action selected: %s " % action
             raise Exception
         return obs
-
-        ###XXX gabe add this function to cleaner_waiter
-        """ 
-        def waitAndGetDrink(self):
-            self.wait_until_msg_is("pr2 ready to place can")
-            self.send_msg_to_pr2("can i come")
-            self.wait_until_msg_is("come " + self.name)
-            self.approach()
-            self.getDrink()
-        """   
 
 
 if __name__=="__main__":

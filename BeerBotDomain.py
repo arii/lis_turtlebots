@@ -26,8 +26,8 @@ class HOLD(ObservationType):
     num = 2
 
 class PR2:
-    SOMEONE, INHAND, NOTHING = range(3)
-    num = 3
+    SOMEONE, INHAND, NOTHING, NO_OBS = range(4)
+    num = 4
 
 class Observations:
     def __init__(self):
@@ -36,7 +36,13 @@ class Observations:
         for obs_type in self.observation_types:
             self.total_obs *= obs_type.num
         print "total_obs = %s " % self.total_obs
-        self.lookup_dot_vect = np.array([12, 6, 3, 1])
+        # make lookup_dot_vect
+        lookup_dot_vect = [obs.num for obs in self.observation_types]
+        for i in range(len(lookup_dot_vect)-1, 0, -1):
+            lookup_dot_vect[i-1] *= lookup_dot_vect[i]
+        lookup_dot_vect = np.array(lookup_dot_vect[1:] + [1])
+        self.lookup_dot_vect = lookup_dot_vect
+
 
     def lookup(self, obs):
         idx = np.dot(self.lookup_dot_vect,  np.array(obs) )
@@ -48,7 +54,7 @@ if __name__=="__main__":
     for i in range(4):
         for j in range( 2):
             for k in range(2):
-                for l in range(3):
+                for l in range(4):
                     o = [i,j,k,l]
                     print "observation  %d =  %s" %(obs.lookup(o), o)
 

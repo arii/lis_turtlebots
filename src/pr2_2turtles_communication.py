@@ -8,7 +8,7 @@ import random
 import os
 from threading import Thread
 
-ARIEL = not True
+ARIEL =  True
 if ARIEL:
   from pick_and_place import pick_and_place
 
@@ -16,7 +16,7 @@ class interface:
   START, PICKING, WAITING_TO_PLACE, PLACING= range(4)
   def __init__(self, init_state=None, debug=False):
       self.server  = SimpleServer(port=12345, threading=True)
-      if  ARIEL:
+      if  True or ARIEL:
           host_D="10.68.0.171"
           host_L="10.68.0.175"
       else:
@@ -38,12 +38,12 @@ class interface:
   
   def event_loop(self):
       while True:
-          rospy.loginfo("starting event loop!  current state = %d" % self.state)
+          #rospy.loginfo("starting event loop!  current state = %d" % self.state)
 
           if self.state == self.START:
               if not ARIEL:
                   pass
-                  #raw_input("Hit enter to start...")
+              #raw_input("Hit enter to start...")
               self.send_msg_to_turtle("not_serving: picking")
               self.t = Thread (target = self.pick_up)
               self.t.start()
@@ -52,14 +52,16 @@ class interface:
                     % self.turtle_being_attended)
               
           if self.state == self.WAITING_TO_PLACE:
+              #raw_input("waiting to place")
               self.send_msg_to_turtle("serving_turtlebot: come "\
                     + self.turtle_being_attended)
               rospy.loginfo("Waiting for " + self.turtle_being_attended)
               self.wait_until_msg_is("turtle in place position", \
                     self.turtle_being_attended)
-              self.state = self.WAITING_TO_PLACE
+              self.state = self.PLACING
           
           if self.state == self.PLACING:
+              #raw_input("placing")
               self.send_msg_to_turtle("serving_turtlebot: placing")
               self.place()
               self.send_msg_to_turtle("serving_turtlebot: pr2 placed object")
@@ -67,7 +69,7 @@ class interface:
               self.wait_until_msg_is("turtle left pr2",\
                     self.turtle_being_attended)
               self.turtle_being_attended = None
-              self.state = self.PICKING
+              self.state = self.START
 
               
   def wait_until_msg_is(self,correct_msg, name="turtle"):
@@ -124,6 +126,7 @@ class interface:
 
   def pick_up(self):
       rospy.loginfo("picking up object")
+      print "STARTING PLACING"
       self.state = self.PICKING
       if ARIEL:
           result = False
@@ -133,7 +136,8 @@ class interface:
           rospy.sleep(1) # dummy action
       if self.turtle_being_attended  != None:
           self.send_msg_to_turtle("not_serving: waiting_for_turtlebot")
-          self.state = self.WAITING_TO_PLACE
+      print "COMPLETED PLACING"
+      self.state = self.WAITING_TO_PLACE
 
 
   def place(self):
@@ -142,6 +146,10 @@ class interface:
           result = False
           while not result:
                 result = self.awesome.place()
+                if not result:
+                    rospy.loginfo("place result failed!")
+                    rospy.sleep(1) # dummy action
+
       else:
           rospy.sleep(1) # dummy action
 
