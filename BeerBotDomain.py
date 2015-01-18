@@ -8,6 +8,7 @@ class AGENTS:
 
 class ACTIONS:
     ROOM_1, ROOM_2, ROOM_3, KITCHEN, GET_DRINK = range(5)
+    num = 5
 
 class ObservationType:
     num= 0
@@ -21,9 +22,11 @@ class LOC(ObservationType):
 
 class ORDERS(ObservationType):
     num = 2
+    NO_ORDERS, ORDERS = range(2)
 
 class HOLD(ObservationType):
     num = 2
+    NOT_HOLDING, HOLDING = range(2)
 
 class PR2:
     SOMEONE, INHAND, NOT_READY, NO_OBS = range(4)

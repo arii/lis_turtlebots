@@ -8,7 +8,7 @@ import random
 import os
 from threading import Thread
 
-ARIEL =  True
+ARIEL =  False
 if ARIEL:
   from pick_and_place import pick_and_place
 
@@ -17,8 +17,10 @@ class interface:
   def __init__(self, init_state=None, debug=False):
       self.server  = SimpleServer(port=12345, threading=True)
       if  True or ARIEL:
-          host_D="10.68.0.171"
-          host_L="10.68.0.175"
+          host_D="10.68.0.165"
+          host_L="10.68.0.165"
+          #host_D="10.68.0.171"
+          #host_L="10.68.0.175"
       else:
           host_D = "localhost"
           host_L = "localhost"

@@ -32,6 +32,7 @@ class TurtleAgent(Agent):
         else:
             print "incorrect action selected: %s " % action
             raise Exception
+        raw_input("completed action %s got observation %s " % aciton,obs)
         return obs
 
 
