@@ -2,6 +2,9 @@
 # Author: Ariel Anders
 # Domain classes for beerbots
 
+import rospy
+import roslib
+roslib.load_manifest('lis_turtlebots')
 from BeerBotDomain import AGENTS, ACTIONS, LOC, ORDERS, HOLD, PR2
 from cleaner_waiter import Waiter
 from Controller import Agent, Controller
@@ -11,7 +14,7 @@ from Controller import Agent, Controller
 class TurtleAgent(Agent):
     def __init__(self, name):
         self.turtle_ctrl = Waiter(name)
-        self.num = name == "leonardo"
+        self.num = int(name == "leonardo")
 
     def do_action(self, action):
 
@@ -32,15 +35,17 @@ class TurtleAgent(Agent):
         else:
             print "incorrect action selected: %s " % action
             raise Exception
-        raw_input("completed action %s got observation %s " % aciton,obs)
         return obs
 
 
 if __name__=="__main__":
     from argparse import ArgumentParser
     parser = ArgumentParser("select which turtle to use.  default is Donatello")
-    parser.add_argument("-d", "--donatello", action="store_true", help="select donatello",dest="donatello")
-    parser.add_argument("-l", "--leonardo", action="store_true", help="select leonardo", dest="leonardo")
+    parser.add_argument("-d", "--donatello", action="store_true",\
+            help="select donatello",dest="donatello")
+    parser.add_argument("-l", "--leonardo", action="store_true",\
+            help="select leonardo", dest="leonardo")
+    
     args = parser.parse_args()
     if not (args.leonardo or args.donatello):
         name = "donatello"
@@ -49,13 +54,17 @@ if __name__=="__main__":
     else:
         name = "donatello"
     rospy.init_node("waiter_"+name)
-    rospy.loginfo("starting waiter with turtle %s " % name)
-    waiter = Waiter(name)
-    ctrl = Controller(waiter)
 
-    raw_input("Hit enter to start...")
+    rospy.loginfo("starting waiter with turtle %s " % name)
+    
+    agent = TurtleAgent(name)
+    policy = "3node"
+    
+    ctrl = Controller(agent, policy)
+
     #initial obs in kitchen without drink or orders
-    ctrl.run(0, [3,0,0,3], True)
+    # initial obs 1 order and robot is in room 
+    ctrl.run(0, [1,1,0,3], True)
 
     
     

@@ -34,11 +34,14 @@ class DummyAgent(Agent):
         return [0,0,0,0]
 
 class Controller:
-    def __init__(self, agent):
+    def __init__(self, agent, prefix = "1node"):
         self.agent = agent
 
-        self.act = import_map("planner_files/actMapMealy.csv")
-        self.trans = import_map("planner_files/TransMap.csv")
+        act_filename = "planner_files/%s_actMapMealy.csv" % prefix
+        trans_filename = "planner_files/%s_transMap.csv" % prefix
+
+        self.act = import_map(act_filename)
+        self.trans = import_map(trans_filename)
         self.observations = Observations()
     
     def action(self, observation):
