@@ -37,8 +37,8 @@ class Controller:
     def __init__(self, agent, prefix = "1node"):
         self.agent = agent
 
-        act_filename = "planner_files/%s_actMapMealy.csv" % prefix
-        trans_filename = "planner_files/%s_transMap.csv" % prefix
+        act_filename = "planner_files/ActMapMealy_%s.csv" % prefix
+        trans_filename = "planner_files/TransMap_%s.csv" % prefix
 
         self.act = import_map(act_filename)
         self.trans = import_map(trans_filename)
