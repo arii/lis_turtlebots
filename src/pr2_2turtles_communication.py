@@ -8,7 +8,7 @@ import random
 import os
 from threading import Thread
 
-ARIEL =  False
+ARIEL =  True
 if ARIEL:
   from pick_and_place import pick_and_place
 
@@ -19,8 +19,9 @@ class interface:
       if  True or ARIEL:
           host_D="10.68.0.165"
           host_L="10.68.0.165"
-          #host_D="10.68.0.171"
-          #host_L="10.68.0.175"
+          
+          host_D="10.68.0.171"
+          host_L="10.68.0.175"
       else:
           host_D = "localhost"
           host_L = "localhost"
@@ -41,19 +42,28 @@ class interface:
   def event_loop(self):
       while True:
           #rospy.loginfo("starting event loop!  current state = %d" % self.state)
-
           if self.state == self.START:
+              print "in start state"
               if not ARIEL:
                   pass
               #raw_input("Hit enter to start...")
               self.send_msg_to_turtle("not_serving: picking")
+              self.pick_complete = False
               self.t = Thread (target = self.pick_up)
               self.t.start()
               self.wait_until_msg_is("can i come", "generic_turtle")
               self.server.update_broadcast("serving_turtlebot: %s "\
                     % self.turtle_being_attended)
-              
+              self.state = self.PICKING
+
+          if self.PICKING:
+              while not self.pick_complete:
+                  rospy.sleep(1)
+              self.state = self.WAITING_TO_PLACE
+
+
           if self.state == self.WAITING_TO_PLACE:
+              print "in waiting to place state"
               #raw_input("waiting to place")
               self.send_msg_to_turtle("serving_turtlebot: come "\
                     + self.turtle_being_attended)
@@ -128,19 +138,18 @@ class interface:
 
   def pick_up(self):
       rospy.loginfo("picking up object")
-      print "STARTING PLACING"
+      print "STARTING PICKING"
       self.state = self.PICKING
       if ARIEL:
           result = False
           while not result:
               result = self.awesome.pick_up()
       else:
-          rospy.sleep(1) # dummy action
-      if self.turtle_being_attended  != None:
+          rospy.sleep(2) # dummy action
+      if self.turtle_being_attended  == None:
           self.send_msg_to_turtle("not_serving: waiting_for_turtlebot")
-      print "COMPLETED PLACING"
-      self.state = self.WAITING_TO_PLACE
-
+      print "COMPLETED PICKING"
+      self.pick_complete = True
 
   def place(self):
       rospy.loginfo("placing can")
