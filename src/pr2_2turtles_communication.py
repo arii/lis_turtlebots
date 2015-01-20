@@ -8,7 +8,7 @@ import random
 import os
 from threading import Thread
 
-ARIEL =  True
+ARIEL =  False
 if ARIEL:
   from pick_and_place import pick_and_place
 
@@ -131,7 +131,9 @@ class interface:
                   else:
                       rospy.sleep(1)
                       continue #no messages received
-              self.turtle_being_attended, msg = msg.split(",")
+              turtle_being_attended, msg = msg.split(",")
+              if msg == "can i come" and self.turtle_being_attended ==None:
+                  self.turtle_being_attended = turtle_being_attended
               msg_received = True
           except: pass
       return msg
@@ -139,7 +141,6 @@ class interface:
   def pick_up(self):
       rospy.loginfo("picking up object")
       print "STARTING PICKING"
-      self.state = self.PICKING
       if ARIEL:
           result = False
           while not result:
@@ -148,6 +149,9 @@ class interface:
           rospy.sleep(2) # dummy action
       if self.turtle_being_attended  == None:
           self.send_msg_to_turtle("not_serving: waiting_for_turtlebot")
+      else:
+          self.send_msg_to_turtle("serving_turtlebot: %s should be diffrent" % self.turtle_being_attended)
+
       print "COMPLETED PICKING"
       self.pick_complete = True
 
