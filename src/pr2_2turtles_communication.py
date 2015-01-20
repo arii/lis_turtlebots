@@ -8,7 +8,14 @@ import random
 import os
 from threading import Thread
 
-ARIEL =  True
+from argparse import ArgumentParser
+parser = ArgumentParser()
+parser.add_argument("--debug", action="store_true")
+args = parser.parse_args()
+ARIEL = not args.debug
+
+
+#ARIEL = False
 if ARIEL:
   from pick_and_place import pick_and_place
 
@@ -180,7 +187,8 @@ def awesome_parse_arguments():
     return init_state
 if __name__=="__main__":
   rospy.init_node("pr2_communication")
-  init_state = awesome_parse_arguments()
+  #init_state = awesome_parse_arguments()
+  init_state = 0
   interface(init_state)
 
 
