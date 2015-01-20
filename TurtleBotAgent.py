@@ -4,6 +4,8 @@
 
 import rospy
 import roslib
+import sys
+sys.path.append("../lis_turtlebots/src")
 roslib.load_manifest('lis_turtlebots')
 from BeerBotDomain import AGENTS, ACTIONS, LOC, ORDERS, HOLD, PR2
 from cleaner_waiter import Waiter
@@ -35,6 +37,7 @@ class TurtleAgent(Agent):
         else:
             print "incorrect action selected: %s " % action
             raise Exception
+	print  "observation= ", obs
         return obs
 
 
@@ -56,7 +59,7 @@ if __name__=="__main__":
     rospy.init_node("waiter_"+name)
 
     rospy.loginfo("starting waiter with turtle %s " % name)
-    
+    raw_input("hit enter to start") 
     agent = TurtleAgent(name)
     policy = "3node"
     
@@ -64,7 +67,7 @@ if __name__=="__main__":
 
     #initial obs in kitchen without drink or orders
     # initial obs 1 order and robot is in room 
-    ctrl.run(0, [1,1,0,3], True)
+    ctrl.run(0, [3,1,0,2], True)
 
     
     
