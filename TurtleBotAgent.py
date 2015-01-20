@@ -61,7 +61,7 @@ if __name__=="__main__":
     rospy.loginfo("starting waiter with turtle %s " % name)
     raw_input("hit enter to start") 
     agent = TurtleAgent(name)
-    policy = "3node"
+    policy = "1node"
     
     ctrl = Controller(agent, policy)
 

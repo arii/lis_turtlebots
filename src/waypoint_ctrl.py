@@ -3,6 +3,7 @@
 
 from time import sleep
 from SimpleServer import SimpleServer, SimpleClient
+from threading import Thread
 class Node:
     def __init__(self, client=0):
         self.simple_server = SimpleServer((12380 + client), False)
@@ -28,10 +29,15 @@ class Manager:
         self.resources = [None]*self.num_waypoints
         host = {0:'localhost', 1:'localhost'}
         self.clients = clients
-        self.simple_server, self.simple_client = {},  {}
+        self.simple_server, self.simple_client, self.msg = {},  {}, {}
+        self.continue_loop = True
         for client in range(self.clients):
             self.simple_server[client] = SimpleServer((12370+client), False)
             self.simple_client[client] = SimpleClient(host=host[client], port =(12380+client))
+            self.msg[client] = []
+            t = Thread(target=self.msg_queue, args=(client,))
+            t.start()
+            
         self.loop()
 
 
@@ -47,6 +53,7 @@ class Manager:
 
         else:
             self.resources[waypoint].append(client)
+        print self.resources
 
     def return_waypoint(self, client, waypoint):
         print "%s returning waypoints %s " % (client, waypoint)
@@ -68,12 +75,37 @@ class Manager:
         self.simple_server[client].broadcast("granted")
         print self.resources
         # def send message to client stating permission granted
+        
+    def msg_queue(self, client):
+        while self.continue_loop:
+            try:
+                msg = self.simple_client[client].get_message()
+                self.msg[client].append(msg)
+            except:
+                sleep(.5)
+
+    def quit_keypress(self):
+        print "q to quit"
+        while self.continue_loop:
+            stop = raw_input()
+            if stop == "q":
+                self.continue_loop = False
+                break
+            
 
     def loop(self):
-        while True:
+        self.continue_loop = True
+        t = Thread(target=self.quit_keypress)
+        t.start()
+
+        while self.continue_loop:
             for client in range(self.clients):
                 try:
-                    msg = self.simple_client[client].get_message()
+                    if len(self.msg[client]) > 0:
+                        msg = self.msg[client].pop(0)
+                    else:
+                        continue
+                    #msg = self.simple_client[client].get_message()
                     msg_type, waypoint = msg.split(",")
                     waypoint = int(waypoint)
                 except:
@@ -89,8 +121,38 @@ class Manager:
                     print "%s is not a valid msg type" % msg_type
 
 
+def node_test(node):
+
+    while True:
+        num = raw_input("input waypoint to request, q to quit")
+        if num == "q":
+            break
+
+        try:
+            waypoint = int(num)
+        except:
+            print ("invalid number: %s " % num)
+            continue
+        node.request(waypoint)
+        raw_input("return waypoint?")
+        node.return_waypoint(waypoint)
+    
             
 
 if __name__=="__main__":
-    manager = Manager()
-    
+    from argparse import ArgumentParser 
+    parser = ArgumentParser()
+    parser.add_argument("type", type=str)
+    args = parser.parse_args()
+    if args.type == "m":
+        manager = Manager()
+    elif args.type == "1":
+        node = Node(1)
+        node_test(node)
+    elif args.type == "0":
+        node = Node(0)
+        node_test(node)
+    else:
+        print "m, 0, or 1 "
+        raise Exception
+

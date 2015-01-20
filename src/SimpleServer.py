@@ -7,8 +7,10 @@ class SimpleClient:
     self.port = port
     self.message_received = "NONE"
 
-  def get_message(self):
+  def get_message(self,timeout=None):
     self.s = socket.socket()         # Create a socket object
+    if timeout != None:
+        self.s.settimeout(timeout)
     self.s.connect((self.host, self.port))
     self.message_received = self.s.recv(1024)
     self.s.close                     # Close the socket when done
