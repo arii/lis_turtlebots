@@ -61,13 +61,13 @@ if __name__=="__main__":
     rospy.loginfo("starting waiter with turtle %s " % name)
     raw_input("hit enter to start") 
     agent = TurtleAgent(name)
-    policy = "1node"
+    policy = "3node"
     
     ctrl = Controller(agent, policy)
 
     #initial obs in kitchen without drink or orders
     # initial obs 1 order and robot is in room 
-    ctrl.run(0, [3,1,0,2], True)
+    ctrl.run(0, [3,0,0,1], True)
 
     
     
