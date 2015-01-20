@@ -72,7 +72,7 @@ if __name__=="__main__":
     else:
         obs = [3,0,0,0]
 
-    ctrl.run(0, obs, False)
+    ctrl.run(0, obs, True)
 
     
     
