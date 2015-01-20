@@ -38,7 +38,7 @@ class Controller:
         self.agent = agent
         prefix = "1node"
         #XXX act_filename = "planner_files/ActMapMealy_%s.csv" % prefix
-        act_filename = "planner_files/ActMapMealy_1node1Opt.csv" 
+        act_filename = "planner_files/ActMapMealy_1nodeOpt.csv" 
         trans_filename = "planner_files/TransMap_%s.csv" % prefix
 
         self.act = import_map(act_filename)
