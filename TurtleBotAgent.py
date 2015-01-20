@@ -69,7 +69,7 @@ if __name__=="__main__":
     # initial obs 1 order and robot is in room 
     if name == "leonardo":
         obs = [3, 0,0,1]
-    else
+    else:
         obs = [0,1,0,3]
 
     ctrl.run(0, obs, True)
