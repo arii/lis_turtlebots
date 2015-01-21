@@ -68,9 +68,9 @@ if __name__=="__main__":
     #initial obs in kitchen without drink or orders
     # initial obs 1 order and robot is in room 
     if name == "leonardo":
-        obs = [3, 0,0,1]
+        obs = [3, 0,0,2]
     else:
-        obs = [3,0,0,3]
+        obs = [3,0,0,2]
 
     ctrl.run(0, obs, False)
 
