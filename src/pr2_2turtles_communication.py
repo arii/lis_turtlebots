@@ -8,7 +8,7 @@ import random
 import os
 from threading import Thread
 
-ARIEL = True# False
+ARIEL = False#   True
 if ARIEL:
   from pick_and_place import pick_and_place
 

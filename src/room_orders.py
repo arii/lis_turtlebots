@@ -69,18 +69,24 @@ class RoomOrders:
             self.rooms[room_number] = self.NO_ORDERS
             if state == self.NO_ORDERS:
                 return_msg =  "0, 1"
+                pritn "NO ORDERS PLACED"
             elif state == self.WANTS_TO_PLACE_ORDER:
                 return_msg =  "0, 0"
+                print "DRINK RECEIVED"
             elif state == self.ORDER_PLACED:
                 return_msg =  "0, 0"
+                print "DRINK RECEIVED"
         else:
             if state == self.NO_ORDERS:
                 return_msg =  "0, 0"
+                print "NO ORDERS PLACED"
             elif state == self.WANTS_TO_PLACE_ORDER:
                 return_msg = "1, 0"
+                print "ORDER PLACED"
                 self.rooms[room_number] = self.ORDER_PLACED
             elif state == self.ORDER_PLACED:
                 return_msg =  "0, 0"
+                print "ORDER PLACED"
         print "current room number = %s, holding = %s.  return order, holding = %s " % (room_number, holding, return_msg) 
         self.respond(client, return_msg)
         print "new state is " 
