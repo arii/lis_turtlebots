@@ -29,6 +29,7 @@ class Node:
             return order, holding
         except:
             print "msg %s does not split" % msg
+        
 
 
 
@@ -39,6 +40,7 @@ class RoomOrders:
         self.num_rooms = 3
         self.rooms = [self.NO_ORDERS]*self.num_rooms
         host = {0:'localhost', 1:'localhost'}
+        host = {0:'10.68.0.171', 1:'10.68.0.175'}
         self.clients = clients
         self.simple_server, self.simple_client, self.msg = {},  {}, {}
         self.continue_loop = True
@@ -84,7 +86,6 @@ class RoomOrders:
         print "new state is " 
         print self.rooms
 
-
     def respond(self,client,msg):
         print "broadcasting message to client %s msg = %s" % (client, msg)
         self.simple_server[client].broadcast(msg)
@@ -99,14 +100,22 @@ class RoomOrders:
                 sleep(.5)
 
     def quit_keypress(self):
-        print "q to quit"
+        print "q to quit, reset to reset rooms"
         while self.continue_loop:
             stop = raw_input()
             if stop == "q":
                 self.continue_loop = False
                 break
-            
+            elif stop == "p":
+                self.print_rooms()
+            elif stop == "reset":
+                self.reset()
 
+    def print_rooms(self):
+        print self.rooms
+    def reset (self):
+        self.rooms = [self.NO_ORDERS]*self.num_rooms
+    
     def loop(self):
         self.continue_loop = True
         t = Thread(target=self.quit_keypress)
