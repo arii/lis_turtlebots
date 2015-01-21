@@ -69,7 +69,7 @@ class RoomOrders:
             self.rooms[room_number] = self.NO_ORDERS
             if state == self.NO_ORDERS:
                 return_msg =  "0, 1"
-                pritn "NO ORDERS PLACED"
+                print "NO ORDERS PLACED"
             elif state == self.WANTS_TO_PLACE_ORDER:
                 return_msg =  "0, 0"
                 print "DRINK RECEIVED"
