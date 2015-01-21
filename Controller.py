@@ -36,9 +36,8 @@ class DummyAgent(Agent):
 class Controller:
     def __init__(self, agent, prefix = "1node"):
         self.agent = agent
-        prefix = "1node"
-        #XXX act_filename = "planner_files/ActMapMealy_%s.csv" % prefix
-        act_filename = "planner_files/ActMapMealy_1nodeOpt.csv" 
+        prefix = "1nodeValid"
+        act_filename = "planner_files/ActMapMealy_%s.csv" % prefix
         trans_filename = "planner_files/TransMap_%s.csv" % prefix
 
         self.act = import_map(act_filename)
