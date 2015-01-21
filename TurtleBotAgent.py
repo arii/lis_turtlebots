@@ -70,9 +70,9 @@ if __name__=="__main__":
     if name == "leonardo":
         obs = [3, 0,0,1]
     else:
-        obs = [3,0,0,0]
+        obs = [3,0,0,3]
 
-    ctrl.run(0, obs, True)
+    ctrl.run(0, obs, False)
 
     
     
