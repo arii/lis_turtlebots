@@ -156,6 +156,8 @@ class interface:
       self.pick_complete = True
 
   def place(self):
+      rospy.sleep(1)
+      rospy.loginfo("sleeping for a second before calling place")
       rospy.loginfo("placing can")
       if ARIEL:
           result = False
