@@ -8,7 +8,7 @@ import random
 import os
 from threading import Thread
 
-ARIEL =  True
+ARIEL =  False
 if ARIEL:
   from pick_and_place import pick_and_place
 
@@ -70,6 +70,15 @@ class interface:
               rospy.loginfo("Waiting for " + self.turtle_being_attended)
               self.wait_until_msg_is("turtle in place position", \
                     self.turtle_being_attended)
+              distance = self.distance_to_turtlebot()
+              times_too_far_away = 0
+              while (distance > 0):
+                    self.send_msg_to_turtle("serving_turtlebot: move;%s;%s"\
+                        %(times_too_far_away, distance))
+                    self.wait_until_msg_is("done moving %s" % times_too_far_away, \
+                        self.turtle_being_attended)
+                    times_too_far_away += 1
+                    distance = self.distance_to_turtlebot()
               self.state = self.PLACING
           
           if self.state == self.PLACING:
@@ -156,8 +165,6 @@ class interface:
       self.pick_complete = True
 
   def place(self):
-      rospy.sleep(1)
-      rospy.loginfo("sleeping for a second before calling place")
       rospy.loginfo("placing can")
       if ARIEL:
           result = False
@@ -169,6 +176,13 @@ class interface:
 
       else:
           rospy.sleep(1) # dummy action
+          
+  def distance_to_turtlebot(self):
+      if ARIEL:
+        _, distance =self.awesome.is_close()
+        return abs(distance)
+      else:
+        return 0
 
 def awesome_parse_arguments():
     parser = ArgumentParser("Select initial state")
