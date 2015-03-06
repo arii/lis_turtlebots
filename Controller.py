@@ -36,7 +36,7 @@ class DummyAgent(Agent):
 class Controller:
     def __init__(self, agent, prefix = "1node"):
         self.agent = agent
-        prefix = "3nodeGood"
+        prefix = "1nodeRSS"
         act_filename = "planner_files/ActMapMealy_%s.csv" % prefix
         trans_filename = "planner_files/TransMap_%s.csv" % prefix
 
