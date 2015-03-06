@@ -11,11 +11,15 @@ class detector:
             os.system("espeak '%s' &" % text)
         button_pressed = self.ser.readline()
         return len(button_pressed) > 0
-   
+def say (text):
+    os.system("espeak '%s' &" % text)
 if __name__=="__main__":
     d = detector()
     while True:
-        print d.detect_button_press("hit the brain to get a drink")
+        if d.detect_button_press("hit the brain to get a drink"):
+             say("I will serve you a drink")
+        else:
+            say("you get nothing!")
 
 
 
