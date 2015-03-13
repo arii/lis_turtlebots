@@ -37,6 +37,9 @@ class detector:
                 and not self.mouse.get_state():
                     pass
         return self.mouse.get_state()
+    def say(self, text):
+        say(text)
+
          
 
 class arduino_detector:
