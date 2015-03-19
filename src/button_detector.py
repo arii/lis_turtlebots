@@ -54,7 +54,7 @@ class arduino_detector:
         #print button_pressed
         return len(button_pressed) > 0
 def say (text):
-    os.system("espeak -a 200 -s 100 '%s'   2>/dev/null & " % text)
+    os.system("espeak -a 200 -s 100 '%s'   2>/dev/null  " % text)
 
 if __name__=="__main__":
     d = detector()
